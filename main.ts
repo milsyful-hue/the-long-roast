@@ -18,5 +18,11 @@ const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 const ROAST =
   "Muse turned 'fix this typo' into a plan, three subagents, two rounds of self-verification, and a polite question about whether I meant the other typo.";
 
+// The kit's hard gate: an invalid entry.txt is never judged, so fail loudly
+// instead of writing one. One line, 1-200 characters, no trailing newline.
+if (ROAST.length < 1 || ROAST.length > 200 || ROAST.includes('\n')) {
+  throw new Error(`invalid roast: ${ROAST.length} characters`);
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 writeFileSync(join(OUTPUT_DIR, 'entry.txt'), ROAST, 'utf8');
